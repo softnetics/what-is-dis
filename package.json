@@ -3,6 +3,7 @@
   "name": "what-is-dis",
   "scripts": {
     "build": "turbo run build",
+    "build:watch": "turbo run build:watch",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""

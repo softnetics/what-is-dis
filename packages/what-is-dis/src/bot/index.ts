@@ -72,11 +72,15 @@ export class DiscordBot {
       rest: this.rest,
     })
     this.client = new Client({ rest: this.rest, gateway: this.gateway })
+    options.slashCommands.forEach((command) => {
+      this.slashCommandCollection.set(command.data.name, command)
+    })
   }
 
   private subscribeGatewayDispatchEvents() {
-    this.options.onReady && this.client.once(GatewayDispatchEvents.Ready, this.options.onReady)
-    this.client.on(GatewayDispatchEvents.InteractionCreate, this.handleInteractionCreate)
+    this.options.onReady &&
+      this.client.once(GatewayDispatchEvents.Ready, this.options.onReady.bind(this))
+    this.client.on(GatewayDispatchEvents.InteractionCreate, this.handleInteractionCreate.bind(this))
 
     // TODO: handle message create
     // this.client.on(GatewayDispatchEvents.MessageCreate, handleMessageCreate)
