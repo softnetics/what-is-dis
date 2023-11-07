@@ -5,5 +5,16 @@
     "build": "tsup",
     "format": "prettier --write \"**/*.js\""
   },
-  "dependencies": {}
+  "dependencies": {
+    "@discordjs/builders": "^1.6.5",
+    "@discordjs/collection": "^1.5.3",
+    "@discordjs/core": "^1.0.1",
+    "@discordjs/rest": "^2.0.1",
+    "@discordjs/ws": "^1.0.1",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@internal/project-config": "workspace:^",
+    "utility-types": "^3.10.0"
+  }
 }

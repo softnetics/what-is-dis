@@ -1,0 +1,22 @@
+import { SlashCommandBuilder } from '@discordjs/builders'
+
+import {
+  CommandOptions,
+  CommandOptionsToNativeType,
+  InputExecuteFn,
+  OutputExecuteFn,
+  SlashCommandType,
+} from '../common/types'
+
+export type SlashCommandBasicProps<TOptions extends CommandOptions> = {
+  name: string
+  description: string
+  options: TOptions
+  execute: InputExecuteFn<CommandOptionsToNativeType<TOptions>>
+}
+
+export type SlashCommandBasicReturn = {
+  type: typeof SlashCommandType.BASIC
+  data: ReturnType<SlashCommandBuilder['toJSON']>
+  execute: OutputExecuteFn
+}
