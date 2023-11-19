@@ -5,6 +5,8 @@ export const InputType = {
   STRING: 'string',
   NUMBER: 'number',
   CHANNEL: 'channel',
+  USER: 'user',
+  ROLE: 'role',
 } as const
 type InputType = ValuesType<typeof InputType>
 
@@ -34,5 +36,20 @@ export type InputChannelOption = InputBaseOption & {
   type: typeof InputType.CHANNEL
 }
 
+// User input
+export type InputUserOption = InputBaseOption & {
+  type: typeof InputType.USER
+}
+
+// Role input
+export type InputRoleOption = InputBaseOption & {
+  type: typeof InputType.ROLE
+}
+
 // Input option
-export type InputOption = InputStringOption | InputNumberOption | InputChannelOption
+export type InputOption =
+  | InputStringOption
+  | InputNumberOption
+  | InputChannelOption
+  | InputUserOption
+  | InputRoleOption

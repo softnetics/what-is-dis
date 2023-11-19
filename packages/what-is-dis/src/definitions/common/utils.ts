@@ -53,6 +53,22 @@ export function setupBuilderOptions<T extends SlashCommandBuilder | SlashCommand
           return option
         })
         break
+      case InputType.USER:
+        builder.addUserOption((option) => {
+          option.setName(toKebabCase(`${key as string}`))
+          if (input.description) option.setDescription(input.description)
+          if (input.required) option.setRequired(input.required)
+          return option
+        })
+        break
+      case InputType.ROLE:
+        builder.addRoleOption((option) => {
+          option.setName(toKebabCase(`${key as string}`))
+          if (input.description) option.setDescription(input.description)
+          if (input.required) option.setRequired(input.required)
+          return option
+        })
+        break
     }
   }
 
@@ -76,7 +92,9 @@ export function constructBodyFromInteractionData<TOptions extends CommandOptions
       }
       case ApplicationCommandOptionType.String:
       case ApplicationCommandOptionType.Number:
-      case ApplicationCommandOptionType.Channel: {
+      case ApplicationCommandOptionType.Channel:
+      case ApplicationCommandOptionType.User:
+      case ApplicationCommandOptionType.Role: {
         const validate = inputOptions[key].validate
         const result = validateWithZodIfExists(commandOption.value, validate)
         if (result !== true) {
