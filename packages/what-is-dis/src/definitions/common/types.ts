@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js'
+import { ChatInputCommandInteraction } from 'discord.js'
 import { ValuesType } from 'utility-types'
 
 import {
@@ -48,10 +48,4 @@ export type CommandOptionsToNativeType<TOptions extends CommandOptions> = {
   [K in keyof TOptions]: TOptions[K]['required'] extends true
     ? ToNativeType<TOptions[K]>
     : ToNativeType<TOptions[K]> | undefined
-}
-
-export type DefineGeneric<TType extends SlashCommandType, TExecute> = {
-  type: TType
-  data: ReturnType<SlashCommandBuilder['toJSON']>
-  execute: TExecute
 }

@@ -8,7 +8,7 @@ import {
 } from '../common/utils'
 import { SlashCommandBasicProps, SlashCommandBasicReturn } from './types'
 
-export function defineSlashCommandBasic<TOptions extends CommandOptions>(
+export function defineSlashCommandBasic<const TOptions extends CommandOptions>(
   props: SlashCommandBasicProps<TOptions>
 ): SlashCommandBasicReturn {
   const builder = new SlashCommandBuilder()

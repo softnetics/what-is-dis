@@ -18,7 +18,6 @@ const config = defineConfig({
       { vars: 'all', varsIgnorePattern: '^_', args: 'after-used', argsIgnorePattern: '^_' },
     ],
     'unused-imports/no-unused-imports-ts': 'error',
-    '@typescript-eslint/no-explicit-any': 'off',
   },
   ignorePatterns: ['.next', 'dist'],
   overrides: [

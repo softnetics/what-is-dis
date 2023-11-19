@@ -36,7 +36,7 @@ export function defineSlashCommandSubcommands(
   }
 }
 
-export function defineSubcommand<TOptions extends CommandOptions>(
+export function defineSubcommand<const TOptions extends CommandOptions>(
   props: SubcommandProps<TOptions>
 ): SubcommandReturn {
   const register: SubcommandReturn['register'] = (subcommand) => {
