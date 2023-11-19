@@ -59,7 +59,12 @@ export function defineSubcommand<const TOptions extends CommandOptions>(
         interaction.options.data
       )
 
+      context.logger.debug(
+        `Executing slash command ${props.name} with body: ${JSON.stringify(body)}`
+      )
+
       if (errors.length > 0) {
+        context.logger.debug(`Slash command ${props.name} has errors: ${JSON.stringify(errors)}`)
         return void handleDiscordInputError(interaction, errors)
       }
 

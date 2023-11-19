@@ -53,7 +53,10 @@ const bot = new DiscordBot({
   refreshCommands: true,
   // Add more slash commands here
   slashCommands: [pingCommand],
-  // This function will be called when the bot is ready
+  // Customized logger
+  loggerOptions: {
+    level: 'debug',
+  }, // This function will be called when the bot is ready
   onReady: ({ logger }) => {
     logger.info('Try to excecute /ping command!')
   },
