@@ -8,12 +8,12 @@ import {
   SlashCommandType,
 } from '../common/types'
 
-export type SubcommandProps<TOptions extends CommandOptions> = {
+export type SubcommandProps<TOptions extends CommandOptions> = Readonly<{
   name: string
   description: string
   options: TOptions
   execute: InputExecuteFn<CommandOptionsToNativeType<TOptions>>
-}
+}>
 
 export type SubcommandReturn = {
   name: string
@@ -21,11 +21,11 @@ export type SubcommandReturn = {
   execute: OutputExecuteFn
 }
 
-export type SlashCommandSubcommandsProps = {
+export type SlashCommandSubcommandsProps = Readonly<{
   name: string
   description: string
-  subcommands: SubcommandReturn[]
-}
+  subcommands: readonly SubcommandReturn[]
+}>
 
 export type SlashCommandSubcommandsReturn = {
   type: typeof SlashCommandType.SUBCOMMAND

@@ -1,5 +1,6 @@
 import { ChatInputCommandInteraction } from 'discord.js'
 import { ValuesType } from 'utility-types'
+import { Logger } from 'winston'
 
 import {
   InputBooleanOption,
@@ -20,6 +21,7 @@ export type SlashCommandType = ValuesType<typeof SlashCommandType>
 export type ExecuteFnProps<TBody> = {
   interaction: ChatInputCommandInteraction
   body: TBody
+  logger: Logger
 }
 
 export type InputExecuteFn<TOptions> = (context: ExecuteFnProps<TOptions>) => void | Promise<void>

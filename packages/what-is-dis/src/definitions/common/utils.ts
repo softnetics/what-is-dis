@@ -13,6 +13,10 @@ import { toKebabCase } from '../../utils/to-kebab-case'
 import { InputType } from './options'
 import { CommandOptions, CommandOptionsToNativeType } from './types'
 
+export function keys<T extends Record<string | number | symbol, unknown>>(obj: T): (keyof T)[] {
+  return Object.keys(obj) as (keyof T)[]
+}
+
 export function validateWithZodIfExists(value: unknown, zodSchema?: ZodType) {
   if (!zodSchema) return true
   const result = zodSchema.safeParse(value)
@@ -22,11 +26,20 @@ export function validateWithZodIfExists(value: unknown, zodSchema?: ZodType) {
 
 export function setupBuilderOptions<T extends SlashCommandBuilder | SlashCommandSubcommandBuilder>(
   builder: T,
-  options: CommandOptions
+  _options: CommandOptions
 ): T {
-  const keys = Object.keys(options) as (keyof typeof options)[]
+  // Swap required options to the front
+  let options: CommandOptions = {}
+  for (const key of keys(_options)) {
+    const input = _options[key]
+    if (input.required) {
+      options = { [key]: input, ...options }
+    } else {
+      options = { ...options, [key]: input }
+    }
+  }
 
-  for (const key of keys) {
+  for (const key of keys(options)) {
     const input = options[key]
     const name = toKebabCase(`${key as string}`)
     switch (input.type) {

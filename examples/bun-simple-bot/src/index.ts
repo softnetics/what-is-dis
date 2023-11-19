@@ -15,12 +15,25 @@ const pingCommand = defineSlashCommandBasic({
         { name: 'World', value: 'world' },
       ],
     },
+    line: {
+      type: 'number',
+      description: 'Number of times to echo back',
+      required: true,
+      choices: [
+        { name: '1 time', value: 1 },
+        { name: '2 times', value: 2 },
+      ],
+    },
   },
-  execute: async ({ interaction, body }) => {
+  execute: async ({ interaction, body, logger }) => {
+    const line = body.line
     const message = body.message
-    //      ^?
+    const singleLine = !message ? `Pong!` : `Pong! ${message}`
+
+    logger.info(`Try to reply with ${line} lines of message!`)
+
     await interaction.reply({
-      content: !message ? 'Pong!' : `Pong! ${message}`,
+      content: Array.from({ length: line }, () => singleLine).join('\n'),
     })
   },
 })
@@ -34,15 +47,19 @@ const bot = new DiscordBot({
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent,
   ],
+  // If this value is set, the bot will only register commands in this guild. It's useful for development.
+  developmentGuildId: environment.DISCORD_DEVELOPMENT_GUILD_ID,
+  // If this value is set to true, the bot will delete the commands before registering them for `developmentGuildId`.
+  refreshCommands: true,
   // Add more slash commands here
   slashCommands: [pingCommand],
   // This function will be called when the bot is ready
-  onReady: () => {
-    console.log('Bot is ready!')
+  onReady: ({ logger }) => {
+    logger.info('Try to excecute /ping command!')
   },
   // This function will be called before the bot shuts down
-  onShutDown: () => {
-    console.log('Bot is shutting down!')
+  onShutDown: async ({ logger }) => {
+    logger.info('Bot is shutting down!')
   },
 })
 

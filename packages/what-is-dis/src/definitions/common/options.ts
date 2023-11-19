@@ -21,26 +21,26 @@ export type InputBaseOption = {
 }
 
 export type InputChoiceOption<T> = {
-  name: string
-  value: T
+  readonly name: string
+  readonly value: T
 }
 
 // String input
 export type InputStringOption = InputBaseOption & {
   type: typeof InputType.STRING
-  choices?: InputChoiceOption<string>[]
+  readonly choices?: readonly InputChoiceOption<string>[]
 }
 
 // Number input
 export type InputNumberOption = InputBaseOption & {
   type: typeof InputType.NUMBER
-  choices?: InputChoiceOption<number>[]
+  readonly choices?: readonly InputChoiceOption<number>[]
 }
 
 // Integer input
 export type InputIntegerOption = InputBaseOption & {
   type: typeof InputType.INTEGER
-  choices?: InputChoiceOption<number>[]
+  readonly choices?: readonly InputChoiceOption<number>[]
 }
 
 // Channel input
