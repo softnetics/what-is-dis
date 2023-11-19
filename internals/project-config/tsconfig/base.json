@@ -14,7 +14,9 @@
     "preserveWatchOutput": true,
     "skipLibCheck": true,
     "strict": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "lib": ["ESNext"],
+    "target": "ESNext"
   },
   "exclude": ["node_modules"]
 }

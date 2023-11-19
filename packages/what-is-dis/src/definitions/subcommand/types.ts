@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, SlashCommandSubcommandBuilder } from '@discordjs/builders'
+import { SlashCommandBuilder, SlashCommandSubcommandBuilder } from 'discord.js'
 
 import {
   CommandOptions,

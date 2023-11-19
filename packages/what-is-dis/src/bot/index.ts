@@ -1,23 +1,17 @@
-import { Collection } from '@discordjs/collection'
 import {
-  API,
-  APIApplicationCommandInteraction,
-  APIInteraction,
   Client,
-  GatewayDispatchEvents,
+  Collection,
+  Events,
   GatewayIntentBits,
-  GatewayReadyDispatchData,
+  Interaction,
   InteractionType,
+  REST,
   RESTPostAPIChatInputApplicationCommandsJSONBody,
   Routes,
-  WithIntrinsicProps,
-} from '@discordjs/core'
-import { REST } from '@discordjs/rest'
-import { WebSocketManager } from '@discordjs/ws'
+} from 'discord.js'
 
 import { SlashCommandType } from '../definitions/common/types'
 import { SlashCommand } from '../definitions/types'
-import { isAPIChatInputApplicationCommandInteractionData } from '../utils/type-guard'
 
 interface DiscordBotOptions {
   /**
@@ -43,20 +37,16 @@ interface DiscordBotOptions {
   /**
    * The callback to run when the bot is ready.
    */
-  onReady?: (args: WithIntrinsicProps<GatewayReadyDispatchData>) => void
+  onReady?: (args: Client) => void
   /**
    * The callback before the bot shut down.
    */
-  onShutDown?: () => void
+  onShutDown?: (args: { rest: REST }) => void
 }
 
 export class DiscordBot {
   // REST manager instance requires a token to make requests
   private readonly rest: REST
-  // API instance requires a REST manager to make requests
-  private readonly api: API
-  // Websocket manager requires a REST manager to make requests
-  private readonly gateway: WebSocketManager
   // Discord client to handle all requests
   private readonly client: Client
   // SlashCommand collections
@@ -64,58 +54,49 @@ export class DiscordBot {
 
   constructor(private readonly options: DiscordBotOptions) {
     this.rest = new REST({ version: '10', timeout: 2000 }).setToken(options.token)
-    this.api = new API(this.rest)
     const intents = options.intents.reduce((acc, cur) => acc | cur, 0)
-    this.gateway = new WebSocketManager({
-      token: options.token,
-      intents: intents,
-      rest: this.rest,
-    })
-    this.client = new Client({ rest: this.rest, gateway: this.gateway })
+    this.client = new Client({ intents })
     options.slashCommands.forEach((command) => {
       this.slashCommandCollection.set(command.data.name, command)
     })
   }
 
   private subscribeGatewayDispatchEvents() {
-    this.options.onReady &&
-      this.client.once(GatewayDispatchEvents.Ready, this.options.onReady.bind(this))
-    this.client.on(GatewayDispatchEvents.InteractionCreate, this.handleInteractionCreate.bind(this))
+    this.options.onReady && this.client.once(Events.ClientReady, this.options.onReady.bind(this))
+    this.client.on(Events.InteractionCreate, this.handleInteractionCreate.bind(this))
 
     // TODO: handle message create
     // this.client.on(GatewayDispatchEvents.MessageCreate, handleMessageCreate)
   }
 
-  private async handleInteractionCreate({
-    data: interaction,
-    api,
-  }: WithIntrinsicProps<APIInteraction>) {
+  private async handleInteractionCreate(interaction: Interaction) {
     switch (interaction.type) {
       case InteractionType.ApplicationCommand:
-        await this.handleApplicationCommand(interaction, api)
+        await this.handleApplicationCommand(interaction)
         break
       default:
         break
     }
   }
 
-  private async handleApplicationCommand(interaction: APIApplicationCommandInteraction, api: API) {
-    const commandName = interaction.data.name
+  private async handleApplicationCommand(interaction: Interaction) {
+    if (!interaction.isChatInputCommand()) return
+
+    const commandName = interaction.commandName
     const command = this.slashCommandCollection.find((command) => command.data.name === commandName)
 
     if (!command) return
 
     switch (command.type) {
       case SlashCommandType.BASIC: {
-        await command.execute({ interaction, api })
+        await command.execute({ interaction })
         break
       }
       case SlashCommandType.SUBCOMMAND: {
-        if (!isAPIChatInputApplicationCommandInteractionData(interaction.data)) return
-        const subcommandName = interaction.data.options?.[0].name
+        const subcommandName = interaction.options.getSubcommand()
         if (!subcommandName) return
         const subcommandExecute = command.execute[subcommandName]
-        subcommandExecute({ interaction, api })
+        subcommandExecute({ interaction })
         break
       }
       default:
@@ -143,28 +124,29 @@ export class DiscordBot {
     }
   }
 
-  private gracefulShutdown() {
+  private setupGracefulShutdown() {
     if (this.options.onShutDown) {
       const onShutDown = this.options.onShutDown.bind(this)
+      const options: Parameters<typeof onShutDown>[0] = { rest: this.rest }
       process.on('SIGINT', () => {
-        onShutDown()
+        onShutDown(options)
         process.exit(0)
       })
       process.on('SIGTERM', () => {
-        onShutDown()
+        onShutDown(options)
         process.exit(0)
       })
       process.on('SIGKILL', () => {
-        onShutDown()
+        onShutDown(options)
         process.exit(0)
       })
     }
   }
 
   async listen() {
-    this.gracefulShutdown()
+    this.setupGracefulShutdown()
     this.subscribeGatewayDispatchEvents()
     await this.registerSlashCommands()
-    await this.gateway.connect()
+    await this.client.login(this.options.token)
   }
 }

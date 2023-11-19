@@ -1,10 +1,11 @@
-import { SlashCommandBuilder, SlashCommandSubcommandBuilder } from '@discordjs/builders'
 import {
-  APIApplicationCommandInteractionDataOption,
   ApplicationCommandOptionType,
-  InteractionsAPI,
+  ChatInputCommandInteraction,
+  CommandInteractionOption,
   MessageFlags,
-} from '@discordjs/core'
+  SlashCommandBuilder,
+  SlashCommandSubcommandBuilder,
+} from 'discord.js'
 import { ZodError, ZodType } from 'zod'
 
 import { toCamelCase } from '../../utils/to-camel-case'
@@ -27,10 +28,11 @@ export function setupBuilderOptions<T extends SlashCommandBuilder | SlashCommand
 
   for (const key of keys) {
     const input = options[key]
+    const name = toKebabCase(`${key as string}`)
     switch (input.type) {
       case InputType.STRING:
         builder.addStringOption((option) => {
-          option.setName(toKebabCase(`${key as string}`))
+          option.setName(name)
           if (input.description) option.setDescription(input.description)
           if (input.required) option.setRequired(input.required)
           if (input.choices && input.choices.length > 0) option.setChoices(...input.choices)
@@ -39,15 +41,25 @@ export function setupBuilderOptions<T extends SlashCommandBuilder | SlashCommand
         break
       case InputType.NUMBER:
         builder.addNumberOption((option) => {
-          option.setName(toKebabCase(`${key as string}`))
+          option.setName(name)
           if (input.description) option.setDescription(input.description)
           if (input.required) option.setRequired(input.required)
+          if (input.choices && input.choices.length > 0) option.setChoices(...input.choices)
+          return option
+        })
+        break
+      case InputType.INTEGER:
+        builder.addIntegerOption((option) => {
+          option.setName(name)
+          if (input.description) option.setDescription(input.description)
+          if (input.required) option.setRequired(input.required)
+          if (input.choices && input.choices.length > 0) option.setChoices(...input.choices)
           return option
         })
         break
       case InputType.CHANNEL:
         builder.addChannelOption((option) => {
-          option.setName(toKebabCase(`${key as string}`))
+          option.setName(name)
           if (input.description) option.setDescription(input.description)
           if (input.required) option.setRequired(input.required)
           return option
@@ -55,7 +67,7 @@ export function setupBuilderOptions<T extends SlashCommandBuilder | SlashCommand
         break
       case InputType.USER:
         builder.addUserOption((option) => {
-          option.setName(toKebabCase(`${key as string}`))
+          option.setName(name)
           if (input.description) option.setDescription(input.description)
           if (input.required) option.setRequired(input.required)
           return option
@@ -63,7 +75,31 @@ export function setupBuilderOptions<T extends SlashCommandBuilder | SlashCommand
         break
       case InputType.ROLE:
         builder.addRoleOption((option) => {
-          option.setName(toKebabCase(`${key as string}`))
+          option.setName(name)
+          if (input.description) option.setDescription(input.description)
+          if (input.required) option.setRequired(input.required)
+          return option
+        })
+        break
+      case InputType.BOOLEAN:
+        builder.addBooleanOption((option) => {
+          option.setName(name)
+          if (input.description) option.setDescription(input.description)
+          if (input.required) option.setRequired(input.required)
+          return option
+        })
+        break
+      case InputType.MENTIONABLE:
+        builder.addMentionableOption((option) => {
+          option.setName(name)
+          if (input.description) option.setDescription(input.description)
+          if (input.required) option.setRequired(input.required)
+          return option
+        })
+        break
+      case InputType.ATTACHMENT:
+        builder.addAttachmentOption((option) => {
+          option.setName(name)
           if (input.description) option.setDescription(input.description)
           if (input.required) option.setRequired(input.required)
           return option
@@ -77,7 +113,7 @@ export function setupBuilderOptions<T extends SlashCommandBuilder | SlashCommand
 
 export function constructBodyFromInteractionData<TOptions extends CommandOptions>(
   inputOptions: TOptions,
-  commandOptions?: APIApplicationCommandInteractionDataOption[]
+  commandOptions?: readonly CommandInteractionOption[]
 ): { body: CommandOptionsToNativeType<TOptions>; errors: ZodError[] } {
   const body = {} as CommandOptionsToNativeType<TOptions>
   const errors: ZodError[] = []
@@ -91,9 +127,12 @@ export function constructBodyFromInteractionData<TOptions extends CommandOptions
         return constructBodyFromInteractionData(inputOptions, subcommandOptions)
       }
       case ApplicationCommandOptionType.String:
+      case ApplicationCommandOptionType.Boolean:
       case ApplicationCommandOptionType.Number:
+      case ApplicationCommandOptionType.Integer:
       case ApplicationCommandOptionType.Channel:
       case ApplicationCommandOptionType.User:
+      case ApplicationCommandOptionType.Mentionable:
       case ApplicationCommandOptionType.Role: {
         const validate = inputOptions[key].validate
         const result = validateWithZodIfExists(commandOption.value, validate)
@@ -102,7 +141,10 @@ export function constructBodyFromInteractionData<TOptions extends CommandOptions
           break
         }
         Object.assign(body, { [key]: commandOption.value })
+        break
       }
+      default:
+        throw new Error(`Unknown option type: ${commandOption.type}`)
     }
   })
 
@@ -110,13 +152,11 @@ export function constructBodyFromInteractionData<TOptions extends CommandOptions
 }
 
 export function handleDiscordInputError(
-  interactionId: string,
-  interactionToken: string,
-  interaction: InteractionsAPI,
+  interaction: ChatInputCommandInteraction,
   errors: ZodError[]
 ) {
   if (errors.length > 0) {
-    interaction.reply(interactionId, interactionToken, {
+    interaction.reply({
       content: `There was an error with your input: ${errors
         .map((error) => error.message)
         .join(', ')}`,

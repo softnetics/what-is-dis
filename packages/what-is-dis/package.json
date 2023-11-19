@@ -15,16 +15,13 @@
     "format": "prettier --write \"**/*.js\""
   },
   "dependencies": {
-    "@discordjs/builders": "^1.6.5",
-    "@discordjs/collection": "^1.5.3",
-    "@discordjs/core": "^1.0.1",
-    "@discordjs/rest": "^2.0.1",
-    "@discordjs/ws": "^1.0.1",
+    "discord.js": "^14.14.1",
     "zod": "^3.22.4"
   },
   "devDependencies": {
     "@internal/project-config": "workspace:^",
     "tsup": "^7.2.0",
+    "typescript": "^5.2.2",
     "utility-types": "^3.10.0"
   }
 }
