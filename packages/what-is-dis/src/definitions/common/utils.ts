@@ -140,13 +140,14 @@ export function constructBodyFromInteractionData<TOptions extends CommandOptions
         return constructBodyFromInteractionData(inputOptions, subcommandOptions)
       }
       case ApplicationCommandOptionType.String:
-      case ApplicationCommandOptionType.Boolean:
       case ApplicationCommandOptionType.Number:
       case ApplicationCommandOptionType.Integer:
       case ApplicationCommandOptionType.Channel:
       case ApplicationCommandOptionType.User:
+      case ApplicationCommandOptionType.Role:
+      case ApplicationCommandOptionType.Boolean:
       case ApplicationCommandOptionType.Mentionable:
-      case ApplicationCommandOptionType.Role: {
+      case ApplicationCommandOptionType.Attachment: {
         const validate = inputOptions[key].validate
         const result = validateWithZodIfExists(commandOption.value, validate)
         if (result !== true) {

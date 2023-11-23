@@ -22,11 +22,11 @@ const pingCommand = defineSlashCommandBasic({
     },
   },
   execute: async ({ interaction, body, logger }) => {
-    const message = body.message // Type: "hello" | "world"
+    const message = body.message // Type: "hello" | "world" | undefined
     const user = body.to // Type: string (user id)
     logger.info(`Received /ping command with message: ${message} and user: ${user}`)
     await interaction.reply({
-      content: `Pong! ${message} <@${user}>`,
+      content: message ? `Pong! ${message} <@${user}>` : `Pong! <@${user}>`,
     })
   },
 })
