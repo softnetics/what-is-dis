@@ -97,13 +97,13 @@ You can find examples in the [examples](./examples) folder.
     - [ ] 🚧 Subcommand groups
     - [x] String
     - [x] Integer
-    - [ ] Boolean
+    - [x] Boolean
     - [x] User
     - [x] Channel
     - [x] Role
-    - [ ] Mentionable
+    - [x] Mentionable
     - [x] Number
-    - [ ] Attachment
+    - [x] Attachment
 - [ ] 🚧 Message command with prefix
 - [ ] 🚧 Message components
   - [ ] 🚧 [Action Rows](https://discordjs.guide/message-components/action-rows.html)
@@ -116,4 +116,8 @@ You can find examples in the [examples](./examples) folder.
 
 # Contributing
 
+WIP...
+
 # License
+
+[MIT](./LICENSE)
