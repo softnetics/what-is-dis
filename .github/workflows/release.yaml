@@ -24,6 +24,7 @@ jobs:
   release:
     uses: softnetics/workflows/.github/workflows/release-packages.yaml@main
     with:
-      before-publish: yarn build
+      before-publish: pnpm build
+      package-manager: pnpm
     secrets:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
