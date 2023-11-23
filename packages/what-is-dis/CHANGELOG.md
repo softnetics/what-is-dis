@@ -1,5 +1,13 @@
 # @softnetics/what-is-dis
 
+## 1.0.1
+
+### Patch Changes
+
+- [#4](https://github.com/softnetics/what-is-dis/pull/4) [`28dd209`](https://github.com/softnetics/what-is-dis/commit/28dd209298cd6bce47e9a06fa469ca6f67c08a13) Thanks [@saenyakorn](https://github.com/saenyakorn)! - Add docs for what-is-dis
+
+- [#4](https://github.com/softnetics/what-is-dis/pull/4) [`9ba8b21`](https://github.com/softnetics/what-is-dis/commit/9ba8b213bfd446254b88467fd0207f409f01ea60) Thanks [@saenyakorn](https://github.com/saenyakorn)! - Fix dependencies error on bundle
+
 ## 1.0.0
 
 ### Major Changes

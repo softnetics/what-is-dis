@@ -1,7 +1,7 @@
 {
   "name": "@example/bun-simple-bot",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "scripts": {
     "dev": "bun --watch src/index.ts"
