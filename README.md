@@ -1,6 +1,6 @@
 # What Is Dis <!-- omit in toc -->
 
-Typescript Discord bot framework aims to be a simple and easy to use framework for creating discord bots. It is built on top of [discord.js](https://discord.js.org/#/) and
+Typescript Discord bot framework aims to be a simple and easy to use framework for creating discord bots. It is built on top of [discord.js](https://discord.js.org/#/)
 
 # Table of Contents <!-- omit in toc -->
 
