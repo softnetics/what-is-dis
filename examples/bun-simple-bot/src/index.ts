@@ -15,25 +15,18 @@ const pingCommand = defineSlashCommandBasic({
         { name: 'World', value: 'world' },
       ],
     },
-    line: {
-      type: 'number',
-      description: 'Number of times to echo back',
+    to: {
+      type: 'user',
+      description: 'User to ping',
       required: true,
-      choices: [
-        { name: '1 time', value: 1 },
-        { name: '2 times', value: 2 },
-      ],
     },
   },
   execute: async ({ interaction, body, logger }) => {
-    const line = body.line
-    const message = body.message
-    const singleLine = !message ? `Pong!` : `Pong! ${message}`
-
-    logger.info(`Try to reply with ${line} lines of message!`)
-
+    const message = body.message // Type: "hello" | "world"
+    const user = body.to // Type: string (user id)
+    logger.info(`Received /ping command with message: ${message} and user: ${user}`)
     await interaction.reply({
-      content: Array.from({ length: line }, () => singleLine).join('\n'),
+      content: `Pong! ${message} <@${user}>`,
     })
   },
 })
@@ -56,7 +49,8 @@ const bot = new DiscordBot({
   // Customized logger
   loggerOptions: {
     level: 'debug',
-  }, // This function will be called when the bot is ready
+  },
+  // This function will be called when the bot is ready
   onReady: ({ logger }) => {
     logger.info('Try to excecute /ping command!')
   },

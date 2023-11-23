@@ -141,14 +141,14 @@ export class DiscordBot {
         this.options.developmentGuildId
       )
       if (this.options.refreshCommands) {
-        this.logger.info('Deleting commands...')
+        this.logger.info(`Deleting commands for guild ${this.options.developmentGuildId}...`)
         await this.rest.put(route, { body: [] })
-        this.logger.info('Commands are deleted!')
+        this.logger.info(`Commands are deleted! for guild ${this.options.developmentGuildId}`)
       }
 
-      this.logger.info('Registering commands...')
+      this.logger.info(`Registering commands for guild ${this.options.developmentGuildId}...`)
       await this.rest.put(route, { body: commands })
-      this.logger.info('Commands are registered!')
+      this.logger.info(`Commands are registered! for guild ${this.options.developmentGuildId}`)
     }
   }
 
