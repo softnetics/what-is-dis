@@ -76,6 +76,12 @@ importers:
       discord.js:
         specifier: ^14.14.1
         version: 14.14.1
+      typescript:
+        specifier: ^5.2.2
+        version: 5.2.2
+      utility-types:
+        specifier: ^3.10.0
+        version: 3.10.0
       winston:
         specifier: ^3.11.0
         version: 3.11.0
@@ -89,12 +95,6 @@ importers:
       tsup:
         specifier: ^7.2.0
         version: 7.2.0(typescript@5.2.2)
-      typescript:
-        specifier: ^5.2.2
-        version: 5.2.2
-      utility-types:
-        specifier: ^3.10.0
-        version: 3.10.0
 
 packages:
 
@@ -2397,7 +2397,7 @@ packages:
   /utility-types@3.10.0:
     resolution: {integrity: sha512-O11mqxmi7wMKCo6HKFt5AhO4BwY3VV68YU07tgxfz8zJTIxr4BpsezN49Ffwy9j3ZpwwJp4fkRwjRzq3uWE6Rg==}
     engines: {node: '>= 4'}
-    dev: true
+    dev: false
 
   /webidl-conversions@3.0.1:
     resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}
