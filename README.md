@@ -1,81 +1,119 @@
-# Turborepo starter
+# What Is Dis <!-- omit in toc -->
 
-This is an official starter Turborepo.
+Typescript Discord bot framework aims to be a simple and easy to use framework for creating discord bots. It is built on top of [discord.js](https://discord.js.org/#/) and
 
-## Using this example
+# Table of Contents <!-- omit in toc -->
 
-Run the following command:
+# Installation
 
-```sh
-npx create-turbo@latest
+```bash
+npm install discord.js @softnetics/what-is-dis
+# Or
+yarn add discord.js @softnetics/what-is-dis
+# Or
+pnpm add discord.js @softnetics/what-is-dis
+# Or
+bun add discord.js @softnetics/what-is-dis
 ```
 
-## What's inside?
+# Usage
 
-This Turborepo includes the following packages/apps:
+```ts
+import { GatewayIntentBits } from '@discordjs/core'
+import { DiscordBot, defineSlashCommandBasic } from '@softnetics/what-is-dis'
 
-### Apps and Packages
+const pingCommand = defineSlashCommandBasic({
+  name: 'ping',
+  description: 'Ping!',
+  options: {
+    message: {
+      type: 'string',
+      description: 'Message to echo back',
+      choices: [
+        { name: 'Hello', value: 'hello' },
+        { name: 'World', value: 'world' },
+      ],
+    },
+    to: {
+      type: 'user',
+      description: 'User to ping',
+      required: true,
+    },
+  },
+  execute: async ({ interaction, body, logger }) => {
+    const message = body.message // Type: "hello" | "world" | undefined
+    const user = body.to // Type: string (user id)
+    logger.info(`Received /ping command with message: ${message} and user: ${user}`)
+    await interaction.reply({
+      content: `Pong! ${message} <@${user}>`,
+    })
+  },
+})
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `ui`: a stub React component library shared by both `web` and `docs` applications
-- `eslint-config-custom`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `tsconfig`: `tsconfig.json`s used throughout the monorepo
+// Create a discord bot instance
+const bot = new DiscordBot({
+  clientId: environment.DISCORD_CLIENT_ID,
+  token: environment.DISCORD_TOKEN,
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent,
+  ],
+  // If this value is set, the bot will only register commands in this guild. It's useful for development.
+  developmentGuildId: environment.DISCORD_DEVELOPMENT_GUILD_ID,
+  // If this value is set to true, the bot will delete the commands before registering them for `developmentGuildId`.
+  refreshCommands: true,
+  // Add more slash commands here
+  slashCommands: [pingCommand],
+  // Customized logger
+  loggerOptions: {
+    level: 'debug',
+  },
+  // This function will be called when the bot is ready
+  onReady: ({ logger }) => {
+    logger.info('Try to excecute /ping command!')
+  },
+  // This function will be called before the bot shuts down
+  onShutDown: async ({ logger }) => {
+    logger.info('Bot is shutting down!')
+  },
+})
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
+// Register the given slash commands and listen for the event
+bot.listen()
 ```
-cd my-turborepo
-pnpm build
-```
 
-### Develop
+# Examples
 
-To develop all apps and packages, run the following command:
+You can find examples in the [examples](./examples) folder.
 
-```
-cd my-turborepo
-pnpm dev
-```
+- [Ping-pong discord bot](./examples/bun-simple-bot/)
 
-### Remote Caching
+# Features
 
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+- [x] Slash commands
+  - Input types
+    - [x] Subcommands
+    - [ ] 🚧 Subcommand groups
+    - [x] String
+    - [x] Integer
+    - [ ] Boolean
+    - [x] User
+    - [x] Channel
+    - [x] Role
+    - [ ] Mentionable
+    - [x] Number
+    - [ ] Attachment
+- [ ] 🚧 Message command with prefix
+- [ ] 🚧 Message components
+  - [ ] 🚧 [Action Rows](https://discordjs.guide/message-components/action-rows.html)
+  - [ ] 🚧 [Buttons](https://discordjs.guide/message-components/buttons.html)
+  - [ ] 🚧 [Select menus](https://discordjs.guide/message-components/select-menus.html)
+- [ ] 🚧 Other components
+  - [ ] 🚧 [Modal](https://discordjs.guide/interactions/modals.html#building-and-responding-with-modals)
+  - [ ] 🚧 [Context Menu](https://discordjs.guide/interactions/context-menus.html)
+- [ ] 🚧 Emoji reactions
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup), then enter the following commands:
+# Contributing
 
-```
-cd my-turborepo
-npx turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-npx turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+# License
