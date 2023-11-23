@@ -1,26 +1,7 @@
-# What Is Dis <!-- omit in toc -->
-
-Typescript Discord bot framework aims to be a simple and easy to use framework for creating discord bots. It is built on top of [discord.js](https://discord.js.org/#/)
-
-# Table of Contents <!-- omit in toc -->
-
-# Installation
-
-```bash
-npm install discord.js @softnetics/what-is-dis
-# Or
-yarn add discord.js @softnetics/what-is-dis
-# Or
-pnpm add discord.js @softnetics/what-is-dis
-# Or
-bun add discord.js @softnetics/what-is-dis
-```
-
-# Usage
-
-```ts
 import { GatewayIntentBits } from '@discordjs/core'
 import { DiscordBot, defineSlashCommandBasic } from '@softnetics/what-is-dis'
+
+import { environment } from './env'
 
 const pingCommand = defineSlashCommandBasic({
   name: 'ping',
@@ -45,7 +26,7 @@ const pingCommand = defineSlashCommandBasic({
     const user = body.to // Type: string (user id)
     logger.info(`Received /ping command with message: ${message} and user: ${user}`)
     await interaction.reply({
-      content: `Pong! ${message} <@${user}>`,
+      content: message ? `Pong! ${message} <@${user}>` : `Pong! <@${user}>`,
     })
   },
 })
@@ -81,43 +62,3 @@ const bot = new DiscordBot({
 
 // Register the given slash commands and listen for the event
 bot.listen()
-```
-
-# Examples
-
-You can find examples in the [examples](./examples) folder.
-
-- [Ping-pong discord bot](./examples/bun-simple-bot/)
-
-# Features
-
-- [x] Slash commands
-  - Input types
-    - [x] Subcommands
-    - [ ] 🚧 Subcommand groups
-    - [x] String
-    - [x] Integer
-    - [x] Boolean
-    - [x] User
-    - [x] Channel
-    - [x] Role
-    - [x] Mentionable
-    - [x] Number
-    - [x] Attachment
-- [ ] 🚧 Message command with prefix
-- [ ] 🚧 Message components
-  - [ ] 🚧 [Action Rows](https://discordjs.guide/message-components/action-rows.html)
-  - [ ] 🚧 [Buttons](https://discordjs.guide/message-components/buttons.html)
-  - [ ] 🚧 [Select menus](https://discordjs.guide/message-components/select-menus.html)
-- [ ] 🚧 Other components
-  - [ ] 🚧 [Modal](https://discordjs.guide/interactions/modals.html#building-and-responding-with-modals)
-  - [ ] 🚧 [Context Menu](https://discordjs.guide/interactions/context-menus.html)
-- [ ] 🚧 Emoji reactions
-
-# Contributing
-
-WIP
-
-# License
-
-[MIT](./LICENSE)
