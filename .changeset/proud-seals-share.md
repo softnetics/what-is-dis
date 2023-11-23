@@ -1,5 +1,5 @@
 ---
-"@softnetics/what-is-dis": patch
+"@softnetics/what-is-dis": major
 ---
 
 First Major Release!
