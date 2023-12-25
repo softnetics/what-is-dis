@@ -1,5 +1,11 @@
 # @softnetics/what-is-dis
 
+## 1.0.2
+
+### Patch Changes
+
+- [`c3bd283650c930b88df6ca4008dfd9a9fb7a3815`](https://github.com/softnetics/what-is-dis/commit/c3bd283650c930b88df6ca4008dfd9a9fb7a3815) Thanks [@saenyakorn](https://github.com/saenyakorn)! - Add getClient method for exposing Discord.js client
+
 ## 1.0.1
 
 ### Patch Changes
