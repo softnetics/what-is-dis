@@ -174,6 +174,10 @@ export class DiscordBot {
     }
   }
 
+  getClient() {
+    return this.client
+  }
+
   async listen() {
     this.setupGracefulShutdown()
     this.subscribeGatewayDispatchEvents()
