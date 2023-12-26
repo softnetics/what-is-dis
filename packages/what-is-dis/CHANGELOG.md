@@ -1,5 +1,11 @@
 # @softnetics/what-is-dis
 
+## 1.2.0
+
+### Minor Changes
+
+- [#10](https://github.com/softnetics/what-is-dis/pull/10) [`f5d618aba0d8b63d056927d2a20dcc6f17416045`](https://github.com/softnetics/what-is-dis/commit/f5d618aba0d8b63d056927d2a20dcc6f17416045) Thanks [@peam1146](https://github.com/peam1146)! - Add reregister command to bot
+
 ## 1.1.0
 
 ### Minor Changes
