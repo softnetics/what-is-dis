@@ -1,5 +1,12 @@
 # @example/bun-simple-bot
 
+## 0.0.4
+
+### Patch Changes
+
+- Updated dependencies [[`7d777e3bd366faf558a8c253a7cda7c7956010c0`](https://github.com/softnetics/what-is-dis/commit/7d777e3bd366faf558a8c253a7cda7c7956010c0)]:
+  - @softnetics/what-is-dis@1.1.0
+
 ## 0.0.3
 
 ### Patch Changes
