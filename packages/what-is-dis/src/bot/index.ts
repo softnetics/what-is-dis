@@ -54,6 +54,10 @@ interface DiscordBotOptions {
    * The callback before the bot shut down.
    */
   onShutDown?: (args: { logger: Logger; client: Client }) => void
+  /**
+   * If true the bot will register the slash commands on start. Defaults to true.
+   */
+  registerCommandsOnStart?: boolean
 }
 
 export class DiscordBot {
@@ -66,6 +70,10 @@ export class DiscordBot {
   private readonly slashCommandCollection = new Collection<string, SlashCommand>()
 
   constructor(private readonly options: DiscordBotOptions) {
+    if (options.registerCommandsOnStart === undefined) {
+      options.registerCommandsOnStart = true
+    }
+
     this.logger = createLogger('bot', this.options.loggerOptions)
     this.rest = new REST({ version: '10', timeout: 2000 }).setToken(options.token)
     const intents = options.intents.reduce((acc, cur) => acc | cur, 0)
@@ -181,7 +189,9 @@ export class DiscordBot {
   async listen() {
     this.setupGracefulShutdown()
     this.subscribeGatewayDispatchEvents()
-    await this.registerSlashCommands()
+    if (this.options.registerCommandsOnStart) {
+      await this.registerSlashCommands()
+    }
     this.logger.info("Bot's logging in...")
     await this.client.login(this.options.token)
     this.logger.info("Bot's ready!")
