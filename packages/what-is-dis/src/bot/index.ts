@@ -122,7 +122,7 @@ export class DiscordBot {
     }
   }
 
-  private async registerSlashCommands() {
+  async registerSlashCommands() {
     const commands: RESTPostAPIChatInputApplicationCommandsJSONBody[] =
       this.slashCommandCollection.map((command) => command.data)
 
@@ -176,10 +176,6 @@ export class DiscordBot {
 
   getClient() {
     return this.client
-  }
-
-  reregisterSlashCommands() {
-    return this.registerSlashCommands()
   }
 
   async listen() {
