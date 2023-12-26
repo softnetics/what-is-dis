@@ -178,6 +178,10 @@ export class DiscordBot {
     return this.client
   }
 
+  reregisterSlashCommands() {
+    return this.registerSlashCommands()
+  }
+
   async listen() {
     this.setupGracefulShutdown()
     this.subscribeGatewayDispatchEvents()
